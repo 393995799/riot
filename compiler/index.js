@@ -6,7 +6,7 @@ const scopedCSS = require('./lib/scoped-css'),
   dom = require('./lib/dom')
 
 // RE
-const LT = /<([^[a-z\/])/g,
+const LT = /<([^[a-z\/!])/g,
   LT2 = /(["'])</g
 
 function escape(html) {

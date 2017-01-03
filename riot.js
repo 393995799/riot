@@ -101,6 +101,7 @@ function Block(block_root, tag, args) {
     each(expr, function(fn) {
       fn.apply(tag, args)
     })
+
   }
 
 
@@ -253,7 +254,7 @@ function isCustom(node) {
 }
 
 function extend(obj, from) {
-  each(Object.keys(from), function(key) {
+  from && each(Object.keys(from), function(key) {
     obj[key] = from[key]
   })
   return obj
@@ -500,6 +501,7 @@ riot.tag = function(name, html, fns, impl, css) {
 
 // mount
 riot.mount = function(name, to, opts) {
+  opts = extend(attributes(to), opts)
 
   // TODO; legacy arguments if (name.tagName) throw 'depceciated' + name + to
   var tag = new Tag(name, to, opts)
@@ -533,7 +535,8 @@ function Tag(tag_name, to, opts, parent) {
     tags = this.tags = {},
     refs = this.refs = {},
     self = this,
-    blocks = []
+    blocks = [],
+    impl
 
 
   function define(name, value) {
@@ -551,19 +554,6 @@ function Tag(tag_name, to, opts, parent) {
 
   define('parent', parent)
 
-  define('update', function(data) {
-    if (opts && opts.update) opts.update()
-    if (data) extend(self, data)
-
-    each(blocks, function(block) {
-      block.update()
-    })
-
-    var fn = self.onupdate
-    fn && fn()
-
-    return self
-  })
 
   this.blocks = blocks
 
@@ -602,9 +592,29 @@ function Tag(tag_name, to, opts, parent) {
 
   private.addBlock(root, [])
 
-  // init
-  var impl = def[2]
-  impl && impl.call(self, self, opts)
+
+  // update
+  define('update', function(data) {
+
+    var fn = self.onupdate
+    fn && fn()
+
+    if (opts && opts.update) opts.update()
+
+    // run initial script once
+    if (!impl) {
+      impl = def[2]
+      impl && impl.call(self, self, opts)
+    }
+
+    if (data) extend(self, data)
+
+    each(blocks, function(block) {
+      block.update()
+    })
+
+    return self
+  })
 
   // mount
   if (to) {

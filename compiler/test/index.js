@@ -3,8 +3,24 @@ const compiler = require('..')({ globals: ['$', 'app'], debug: true }),
   compile = compiler.compile,
   assert = require('assert')
 
-// special characters
+
+// HTML comments
 var tag = compile(`
+  <!-- foo -->
+  <test>
+    <!--
+      <b>
+    -->
+    <h3>Baari</h3>
+  </test>
+
+`)
+
+assert.equal(tag.html, '<test> <h3>Baari</h3></test>')
+
+
+// special characters
+tag = compile(`
   <test>
     { app.foo }
     <script>
