@@ -37,7 +37,7 @@ module.exports = function(opts) {
           /\w+:/.test(el.trim()) ? objectify(el, args) :
           setThis(el, args)
       }
-      return '"' + el + '"'
+      return '"' + el.replace(/"/g, '\\"') + '"'
 
     }).filter(function(el) {
       return el != '""'

@@ -7,10 +7,10 @@ const scopedCSS = require('./lib/scoped-css'),
 
 // RE
 const LT = /<([^[a-z\/!])/g,
-  LT2 = /(["'])</g
+  LT2 = /\((["'])</g
 
 function escape(html) {
-  return html.replace(LT, '&lt;$1').replace(LT2, '$1&lt;')
+  return html.replace(LT, '&lt;$1').replace(LT2, '($1&lt;')
 }
 
 function unescape(js) {
