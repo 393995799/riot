@@ -65,6 +65,7 @@ module.exports = function(tag_name, root, extra, opts) {
 
       // each attribute
       const each_args = getLoopArgs(el)
+
       if (each_args) {
         loop_args[level] = each_args
         loop_args.splice(level + 1, loop_args.length)
@@ -79,6 +80,9 @@ module.exports = function(tag_name, root, extra, opts) {
 
       const i = pushFn(text)
       if (i >= 0) el.nodeValue = '$' + i
+      else if (text && text.includes("'")) {
+        el.nodeValue = text.replace(/'/g, "\\'")
+      }
 
     })
 

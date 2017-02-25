@@ -109,7 +109,11 @@ module.exports = function(test, assert) {
       <child1 name="a"/>
       <child1 id="b"/>
       <child1 each={ el in opts.items }/>
-      <child2 name="b"/>
+      <child2 name="x"/>
+
+      <a name="c">1</a>
+      <a name="c">1</a>
+
     </tags-and-refs>
 
     <child1></child1>,
@@ -119,10 +123,10 @@ module.exports = function(test, assert) {
 
 
 
-  assert.equal(tag.tags.child1.length, 4)
-  assert.equal(typeof tag.tags.child2.update, 'function')
+  assert.equal(tag.tags.child1.length, 2)
+  assert.equal(typeof tag.tags.x.update, 'function')
 
-  assert.equal(tag.refs.b.length, 2)
+  assert.equal(tag.refs.c.length, 2)
   assert.equal(tag.refs.a.nodeType, 1)
 
 
