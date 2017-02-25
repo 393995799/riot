@@ -6,7 +6,7 @@ module.exports = function(test, assert) {
   // conditionals
   tag = test(`
     <test>
-      <div>{{ foo }} b</div>
+      <div>{{ foo }}</div>
       <script>
       this.foo = '<b>bar</b>'
       </script>
