@@ -6,9 +6,10 @@ module.exports = function(test, assert) {
   // conditionals
   tag = test(`
     <test>
-      <div>{ instant ? 'bar' : kama + ' zap bar ' + kama }</div>
+      <div>{ !opts.kamaa }</div>
       <script>
-      this.kama = 'joo'
+        this.kama = 'joo'
+        this.foo = null
       </script>
     </test>
 
