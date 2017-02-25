@@ -46,7 +46,7 @@ function Block(block_root, tag, args) {
     // custom tag
     if (node != tag.root && isCustom(node)) {
       var instance = new Tag(tag_name, node, new UpdatingOpts(node, attr), tag)
-      _tag.addChild(tag_name, instance)
+      _tag.addChild(ref || tag_name, instance)
       tags.push(instance)
       return false
     }
@@ -228,6 +228,10 @@ function findNode(root, name) {
     if (ret) return false
   })
   return ret
+}
+
+function cleanNode(node) {
+  while (node.firstChild) removeNode(node.firstChild)
 }
 
 function moveChildren(from, to) {
@@ -502,6 +506,7 @@ riot.tag = function(name, html, fns, impl, css) {
 // mount
 riot.mount = function(name, to, opts) {
   opts = extend(attributes(to), opts)
+  cleanNode(to)
 
   // TODO; legacy arguments if (name.tagName) throw 'depceciated' + name + to
   var tag = new Tag(name, to, opts)
@@ -592,6 +597,12 @@ function Tag(tag_name, to, opts, parent) {
 
   private.addBlock(root, [])
 
+
+  // unmount
+  define('unmount', function() {
+    private.removeBlock(root)
+    removeNode(root)
+  })
 
   // update
   define('update', function(data) {

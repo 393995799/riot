@@ -3,29 +3,18 @@ module.exports = function(test, assert) {
 
   var $, tag, el
 
-  // parent option passing
+  // conditionals
   tag = test(`
-    <option-passing>
-      <child-data data={ data }/>
+    <test>
+      <div>{{ foo }} b</div>
       <script>
-        this.data = 100 + 190
+      this.foo = '<b>bar</b>'
       </script>
-    </option-passing>
+    </test>
 
-    <child-data>
-      <script>
-        console.info('RET', opts.data)
-      </script>
-    </child-data>
   `)
 
-
-  el = tag.find('h1')
-  return
-  assert.equal(el.text(), '10 bar lad')
-
-  tag.update({ a: 'boy', data: { a: 101 } })
-  assert.equal(el.text(), '101 bar boy')
+  console.info(tag.root.innerHTML)
 
 
 }

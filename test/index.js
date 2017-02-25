@@ -7,7 +7,7 @@ const tags = [],
   start = Date.now()
 
 
-if (false) {
+if (true) {
   require('./unit')(test, assert)
 
 } else {
