@@ -6,10 +6,9 @@ module.exports = function(test, assert) {
   // conditionals
   tag = test(`
     <test>
-      <div>{ 'some boo': ok }</div>
-      <b>This goe's hay</b>
+      <b>$</b>
       <script>
-        this.ok = 'joo'
+        this.ok = '</p><p>'
       </script>
     </test>
 

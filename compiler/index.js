@@ -1,16 +1,16 @@
 
 // libs
-const scopedCSS = require('./lib/scoped-css'),
+const RE_SCRIPT = /(<script\b[^>]*>)([\s\S]*?)(<\/script>)/gm,
+  scopedCSS = require('./lib/scoped-css'),
   parsers = require('./lib/parsers'),
   Tag = require('./lib/tag'),
   dom = require('./lib/dom')
 
-// RE
-const LT = /<([^[a-z\/!])/g,
-  LT2 = /\((["'])</g
 
 function escape(html) {
-  return html.replace(LT, '&lt;$1').replace(LT2, '($1&lt;')
+  return html.replace(RE_SCRIPT, function(_, a, str, b) {
+    return a + str.replace(/</g, '&lt;') + b
+  })
 }
 
 function unescape(js) {
@@ -79,9 +79,6 @@ module.exports = function(global_opts) {
     const opts = parsers(global_opts.parsers, local_opts),
       html = escape(opts.html(unindent(src)))
 
-
-    // console.info(html)
-
     const doc = dom.parse(html.trim())
 
     var ret = '', index = 0, node
@@ -92,6 +89,7 @@ module.exports = function(global_opts) {
       // script outside tag definitions
       if (tag_name == 'script') {
         ret += unescape(dom.html(node))
+
 
       } else if (tag_name) {
         var root = dom.create('div')
