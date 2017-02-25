@@ -1,7 +1,8 @@
 
 const RESERVED = 'arguments console document false function instanceof location null self this top true typeof undefined window'.split(' '),
-  VAR_NAME = /(^|[\-\+\!\s\(])+([a-z]\w*)\b\s?/g,
-  EXPR = /\{([^}]+)\}\}?/g
+  VAR_NAME = /(^|[\-\+\!\s\(]+)([a-z]\w*)\b\s?/g,
+  EXPR = /\{([^}]+)\}\}?/g,
+  WEIRD = 'œœœ'
 
 
 module.exports = function(opts) {
@@ -13,12 +14,20 @@ module.exports = function(opts) {
   }
 
   function setThis(expr, args) {
-     args = args ? args.split(/\s*,\s*/) : []
+    args = args ? args.split(/\s*,\s*/) : []
 
-    return expr.replace(VAR_NAME, function(match, beg, key) {
+    expr = expr.replace(/'([^']+)'/g, function(str) {
+      return str.replace(/ /g, WEIRD)
+    })
+
+    expr = expr.replace(VAR_NAME, function(match, beg, key, i) {
       if (RESERVED.includes(key) || args.concat(opts.globals).includes(key)) return match
       return beg + 'this.' + key.trimLeft()
     })
+
+    expr = expr.replace(new RegExp(WEIRD, 'g'), ' ')
+
+    return expr
   }
 
   function objectify(str, args) {
